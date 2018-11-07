@@ -2,10 +2,12 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as express from 'express';
 import * as bodyParser from "body-parser";
+const cors = require('cors');
 const moment = require('moment');
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 const app = express();
+app.use(cors())
 const main = express();
 main.use('/api/v1', app);
 main.use(bodyParser.json());
@@ -38,6 +40,7 @@ app.get('/users/:userId', (req, res) => {
 // View all users
 app.get('/users', (req, res) => {
     let data = {};
+    data[userCollection] = {};
     db.collection(userCollection).get().then(function(querySnapshot) {
         querySnapshot.forEach(doc => {
             // doc.data() is never undefined for query doc snapshots
